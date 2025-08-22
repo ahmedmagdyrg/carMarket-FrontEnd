@@ -1,0 +1,77 @@
+<h1>Add a new listing</h1>
+
+<form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
+  <!-- Make -->
+  <div class="row">
+    <label>Make</label>
+    <input formControlName="make" placeholder="e.g., Toyota" />
+    <small *ngIf="submitted && form.controls['make'].invalid">Required</small>
+  </div>
+
+  <!-- Model -->
+  <div class="row">
+    <label>Model</label>
+    <input formControlName="model" placeholder="e.g., Corolla" />
+    <small *ngIf="submitted && form.controls['model'].invalid">Required</small>
+  </div>
+
+  <!-- Year -->
+  <div class="row">
+    <label>Year</label>
+    <input type="number" formControlName="year" [max]="maxYear" />
+    <small *ngIf="submitted && form.controls['year'].invalid">
+      Year must be between 1980 and {{ maxYear }}
+    </small>
+  </div>
+
+  <!-- Price -->
+  <div class="row">
+    <label>Price (USD)</label>
+    <input type="number" formControlName="price" />
+    <small *ngIf="submitted && form.controls['price'].invalid">Must be ≥ 0</small>
+  </div>
+
+  <!-- Mileage -->
+  <div class="row">
+    <label>Mileage (km)</label>
+    <input type="number" formControlName="mileage" />
+    <small *ngIf="submitted && form.controls['mileage'].invalid">Must be ≥ 0</small>
+  </div>
+
+  <!-- Condition -->
+  <div class="row">
+    <label>Condition</label>
+    <select formControlName="condition">
+      <option>New</option>
+      <option>Used</option>
+      <option>Certified</option>
+    </select>
+  </div>
+
+  <!-- Features -->
+  <div class="row">
+    <label>Features</label>
+    <input
+      formControlName="features"
+      placeholder="Comma separated (e.g., Sunroof, Leather Seats)"
+    />
+  </div>
+
+  <!-- Description -->
+  <div class="row">
+    <label>Description</label>
+    <textarea formControlName="description" rows="4"></textarea>
+  </div>
+
+  <!-- Image URL -->
+  <div class="row">
+    <label>Image URL (800×600)</label>
+    <input formControlName="imageUrl" placeholder="assets/images/cars/your-image.jpg" />
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">Save Listing</button>
+    <a routerLink="/" class="btn btn-light">Cancel</a>
+  </div>
+</form>

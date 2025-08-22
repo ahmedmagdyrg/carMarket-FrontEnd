@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2021,
+    "price": 17500,
+    "mileage": 42000,
+    "condition": "Certified",
+    "features": ["Bluetooth", "Backup Camera", "Lane Assist"],
+    "description": "Reliable daily driver with full service history.",
+    "imageUrl": "assets/images/cars/corolla.jpg"
+  },
+  {
+    "id": 2,
+    "make": "Honda",
+    "model": "Civic",
+    "year": 2022,
+    "price": 21500,
+    "mileage": 18000,
+    "condition": "Used",
+    "features": ["Apple CarPlay", "Heated Seats", "Cruise Control"],
+    "description": "Sporty and efficient. One owner, non-smoker.",
+    "imageUrl": "assets/images/cars/civic.jpg"
+  },
+  {
+    "id": 3,
+    "make": "Ford",
+    "model": "Mustang",
+    "year": 2020,
+    "price": 29500,
+    "mileage": 35000,
+    "condition": "Used",
+    "features": ["V8", "Leather", "Premium Audio"],
+    "description": "Thrilling performance with a clean interior.",
+    "imageUrl": "assets/images/cars/mustang.jpg"
+  },
+  {
+    "id": 4,
+    "make": "BMW",
+    "model": "3 Series",
+    "year": 2023,
+    "price": 38900,
+    "mileage": 9000,
+    "condition": "Certified",
+    "features": ["Sunroof", "Navigation", "Parking Sensors"],
+    "description": "Luxury compact sedan with excellent handling.",
+    "imageUrl": "assets/images/cars/bmw-3.jpg"
+  },
+  {
+    "id": 5,
+    "make": "Tesla",
+    "model": "Model 3",
+    "year": 2024,
+    "price": 42900,
+    "mileage": 5000,
+    "condition": "New",
+    "features": ["Autopilot", "Glass Roof", "Fast Charging"],
+    "description": "All-electric with cutting-edge tech and long range.",
+    "imageUrl": "assets/images/cars/model3.jpg"
+  },
+  {
+    "id": 6,
+    "make": "Kia",
+    "model": "Sportage",
+    "year": 2019,
+    "price": 14200,
+    "mileage": 78000,
+    "condition": "Used",
+    "features": ["Android Auto", "Alloy Wheels", "Dual Zone A/C"],
+    "description": "Spacious compact SUV in great condition.",
+    "imageUrl": "assets/images/cars/sportage.jpg"
+  }
+]

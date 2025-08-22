@@ -1,0 +1,50 @@
+<section class="head">
+  <h1>Find your next car</h1>
+  <div class="filters">
+    <!-- Search input -->
+    <input
+      type="text"
+      [ngModel]="q()"
+      (ngModelChange)="q.set($event)"
+      placeholder="Search by make, model, or year"
+    />
+
+    <!-- Max price -->
+    <input
+      type="number"
+      min="0"
+      placeholder="Max price (USD)"
+      [ngModel]="maxPrice()"
+      (ngModelChange)="maxPrice.set($event ? +$event : null)"
+    />
+
+    <!-- Condition filter -->
+    <select [ngModel]="condition()" (ngModelChange)="condition.set($event)">
+      <option value="All">All</option>
+      <option value="New">New</option>
+      <option value="Used">Used</option>
+      <option value="Certified">Certified</option>
+    </select>
+
+    <!-- Sort by -->
+    <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+      <option value="newest">Newest</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+    </select>
+
+    <button class="btn btn-light" (click)="clearFilters()">Reset</button>
+  </div>
+</section>
+
+<!-- Loading state -->
+<div *ngIf="loading()">Loading…</div>
+
+<!-- Car list -->
+<section class="grid" *ngIf="!loading()">
+  <app-car-card
+    *ngFor="let car of filtered(); trackBy: trackByCar"
+    [car]="car"
+    (view)="open($event)">
+  </app-car-card>
+</section>

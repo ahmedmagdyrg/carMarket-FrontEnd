@@ -1,0 +1,56 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Create an Account</h2>
+
+    <form (ngSubmit)="onSubmit()" #f="ngForm" novalidate>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          name="name"
+          [(ngModel)]="name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="At least 6 characters"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+        />
+      </div>
+
+      <button class="btn-primary" type="submit" [disabled]="loading || !f.form.valid">
+        {{ loading ? 'Creating…' : 'Register' }}
+      </button>
+    </form>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <p class="muted">
+      Already have an account?
+      <a routerLink="/login" class="link">Login</a>
+    </p>
+  </div>
+</div>

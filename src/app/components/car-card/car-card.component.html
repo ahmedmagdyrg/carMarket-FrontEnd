@@ -1,0 +1,20 @@
+<div class="card">
+  <img
+    class="thumb"
+    [src]="car.imageUrl"
+    [alt]="car.make + ' ' + car.model"
+    loading="lazy"
+  />
+  <div class="body">
+    <h3 class="title">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+    <div class="meta">
+      <span class="price">{{ car.price | currency:'USD':'symbol':'1.0-0' }}</span>
+      <span class="dot">•</span>
+      <span class="mileage">{{ car.mileage | number }} km</span>
+    </div>
+    <div class="tags">
+      <span class="chip">{{ car.condition }}</span>
+    </div>
+    <button class="btn btn-accent" (click)="view.emit(car.id)">View Details</button>
+  </div>
+</div>

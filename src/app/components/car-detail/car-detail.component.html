@@ -1,0 +1,30 @@
+<a routerLink="/" class="back">← Back to listings</a>
+
+<section class="hero" *ngIf="car() as c">
+  <img [src]="c.imageUrl" [alt]="c.make + ' ' + c.model" />
+  <div class="info">
+    <h1>{{ c.year }} {{ c.make }} {{ c.model }}</h1>
+    <div class="price">{{ c.price | currency:'USD':'symbol':'1.0-0' }}</div>
+    <div class="specs">
+      <span class="chip">{{ c.condition }}</span>
+      <span class="chip">{{ c.mileage | number }} km</span>
+    </div>
+    <div class="cta">
+      <a class="btn btn-primary" href="tel:+201001234567">Contact Seller</a>
+      <a class="btn btn-accent" routerLink="/cars/new">List Your Car</a>
+    </div>
+  </div>
+</section>
+
+<section class="cards" *ngIf="car() as c">
+  <div class="card">
+    <h3>Key Features</h3>
+    <ul>
+      <li *ngFor="let f of c.features">{{ f }}</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Description</h3>
+    <p>{{ c.description }}</p>
+  </div>
+</section>
