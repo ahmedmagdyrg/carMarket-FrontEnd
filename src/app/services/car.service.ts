@@ -12,7 +12,7 @@ export class CarService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private mapCar(c: any) {
-    return { ...c, id: c._id }; 
+    return { ...c, id: c._id };
   }
 
   private getAuthHeaders(): { headers: HttpHeaders } {

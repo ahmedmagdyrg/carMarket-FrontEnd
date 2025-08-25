@@ -1,7 +1,12 @@
-<a routerLink="/" class="back">← Back to listings</a>
+<a routerLink="/cars" class="back">← Back to listings</a>
 
 <section class="hero" *ngIf="car() as c">
-  <img [src]="c.imageUrl" [alt]="c.make + ' ' + c.model" />
+  <div class="image-slider" *ngIf="c.images?.length">
+    <img [src]="c.images[currentIndex]" [alt]="c.make + ' ' + c.model" />
+    <button class="slider-btn left" (click)="prevImage()">‹</button>
+    <button class="slider-btn right" (click)="nextImage()">›</button>
+  </div>
+
   <div class="info">
     <h1>{{ c.year }} {{ c.make }} {{ c.model }}</h1>
     <div class="price">{{ c.price | currency:'USD':'symbol':'1.0-0' }}</div>
@@ -9,9 +14,25 @@
       <span class="chip">{{ c.condition }}</span>
       <span class="chip">{{ c.mileage | number }} km</span>
     </div>
+
     <div class="cta">
-      <a class="btn btn-primary" href="tel:+201001234567">Contact Seller</a>
+      <button class="btn btn-primary" (click)="showContact = !showContact">
+        Contact Seller
+      </button>
       <a class="btn btn-accent" routerLink="/cars/new">List Your Car</a>
+
+      <!-- Edit/Delete visible only for owner -->
+      <ng-container *ngIf="isOwner()">
+        <a class="btn btn-secondary" [routerLink]="['/cars', c.id, 'edit']">Edit</a>
+        <button class="btn btn-danger" (click)="deleteCar()">Delete</button>
+      </ng-container>
+    </div>
+
+    <!-- Contact Seller popup -->
+    <div class="contact-box" *ngIf="showContact">
+      <p><strong>Seller Contact:</strong></p>
+      <p class="phone">{{ c.contactMethod }}</p>
+      <button class="btn btn-accent" (click)="showContact = false">Close</button>
     </div>
   </div>
 </section>

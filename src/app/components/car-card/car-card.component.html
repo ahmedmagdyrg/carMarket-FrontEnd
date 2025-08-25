@@ -1,10 +1,15 @@
 <div class="card">
-  <img
-    class="thumb"
-    [src]="car.imageUrl"
-    [alt]="car.make + ' ' + car.model"
-    loading="lazy"
-  />
+  <div class="thumb-wrapper">
+    <img
+      class="thumb"
+      [src]="images[currentIndex]"
+      [alt]="car.make + ' ' + car.model"
+      loading="lazy"
+    />
+    <button *ngIf="images.length > 1" class="nav prev" (click)="prev()">‹</button>
+    <button *ngIf="images.length > 1" class="nav next" (click)="next()">›</button>
+  </div>
+
   <div class="body">
     <h3 class="title">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
     <div class="meta">
@@ -15,6 +20,8 @@
     <div class="tags">
       <span class="chip">{{ car.condition }}</span>
     </div>
-    <button class="btn btn-accent" (click)="view.emit(car.id)">View Details</button>
+    <button class="btn btn-accent" (click)="view.emit(car.id)">
+      View Details
+    </button>
   </div>
 </div>

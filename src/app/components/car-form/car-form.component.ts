@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CarService } from '../../services/car.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-car-form',
@@ -11,8 +12,11 @@ import { CarService } from '../../services/car.service';
   templateUrl: './car-form.component.html',
   styleUrls: ['./car-form.component.scss']
 })
-export class CarFormComponent {
+export class CarFormComponent implements OnInit {
   submitted = false;
+  selectedFiles: File[] = [];
+  isEdit = false;
+  carId: string | null = null;
 
   currentYear = new Date().getFullYear();
   maxYear = this.currentYear + 1;
@@ -22,7 +26,8 @@ export class CarFormComponent {
   constructor(
     private fb: FormBuilder,
     private svc: CarService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       make: ['', [Validators.required]],
@@ -34,33 +39,104 @@ export class CarFormComponent {
       price: [10000, [Validators.required, Validators.min(0)]],
       mileage: [0, [Validators.required, Validators.min(0)]],
       condition: ['Used', [Validators.required]],
-      features: ['Bluetooth, Backup Camera'],
-      description: ['Clean and well maintained.'],
-      imageUrl: ['assets/images/cars/placeholder.jpg', [Validators.required]],
+      features: [''],
+      description: [''],
+      contactMethod: ['', [Validators.required]]
     });
+  }
+
+  ngOnInit() {
+    this.carId = this.route.snapshot.paramMap.get('id');
+    if (this.carId) {
+      this.isEdit = true;
+      this.loadCar();
+    }
+  }
+
+  async loadCar() {
+    try {
+      const car = await this.svc.getById(this.carId!);
+      this.form.patchValue({
+        make: car.make,
+        model: car.model,
+        year: car.year,
+        price: car.price,
+        mileage: car.mileage,
+        condition: car.condition,
+        features: car.features ? car.features.join(', ') : '',
+        description: car.description,
+        contactMethod: car.contactMethod
+      });
+    } catch (err) {
+      console.error('Failed to load car', err);
+    }
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFiles = Array.from(event.target.files);
   }
 
   async save() {
     this.submitted = true;
+
+    // 🔹 Check if user is logged in before saving
+    const token = localStorage.getItem('token');
+    if (!token) {
+      Swal.fire({
+        title: 'Not Logged In',
+        text: 'You must be logged in to save a listing!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
+      return;
+    }
+
     if (this.form.invalid) return;
 
     const value = this.form.value;
-    await this.svc.create({
-      make: value.make as string,
-      model: value.model as string,
-      year: value.year as number,
-      price: value.price as number,
-      mileage: value.mileage as number,
-      condition: value.condition as 'New' | 'Used' | 'Certified',
-      features: value.features
-        ? (value.features as string).split(',')
-            .map((s: string) => s.trim())
-            .filter(Boolean)
-        : [],
-      description: value.description || '',
-      imageUrl: value.imageUrl as string,
+    const formData = new FormData();
+
+    formData.append('make', value.make);
+    formData.append('model', value.model);
+    formData.append('year', value.year.toString());
+    formData.append('price', value.price.toString());
+    formData.append('mileage', value.mileage.toString());
+    formData.append('condition', value.condition);
+    formData.append('description', value.description || '');
+    formData.append('contactMethod', value.contactMethod);
+
+    (value.features ? value.features.split(',') : []).forEach((f: string) => {
+      if (f.trim()) formData.append('features[]', f.trim());
     });
 
-    this.router.navigateByUrl('/');
+    if (!this.isEdit && this.selectedFiles.length > 0) {
+      this.selectedFiles.forEach(file => {
+        formData.append('images', file);
+      });
+    }
+
+    try {
+      let savedCar: any;
+
+      if (this.isEdit) {
+        // Update existing car
+        savedCar = await this.svc.update(this.carId!, formData);
+        // Navigate to car detail page after update
+        this.router.navigate(['/cars', this.carId]);
+      } else {
+        // Create new car
+        savedCar = await this.svc.create(formData);
+        this.router.navigate(['/cars', savedCar._id]);
+      }
+
+    } catch (err) {
+      console.error('Save failed', err);
+    }
   }
 }

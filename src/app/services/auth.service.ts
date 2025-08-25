@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +9,20 @@ export class AuthService {
   private readonly apiUrl = 'http://localhost:5000/api/auth';
   private readonly TOKEN_KEY = 'token';
 
+  // BehaviorSubject to track login state
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   // Login request
   login(data: { email: string; password: string }): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, data).pipe(
       tap(res => {
-        if (res.token) this.saveToken(res.token);
+        if (res.token) {
+          this.saveToken(res.token);
+          this.isLoggedInSubject.next(true);
+        }
       })
     );
   }
@@ -24,7 +31,10 @@ export class AuthService {
   register(data: { name: string; email: string; password: string }): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/register`, data).pipe(
       tap(res => {
-        if (res.token) this.saveToken(res.token);
+        if (res.token) {
+          this.saveToken(res.token);
+          this.isLoggedInSubject.next(true);
+        }
       })
     );
   }
@@ -43,14 +53,15 @@ export class AuthService {
   // Logout
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    this.isLoggedInSubject.next(false);
   }
 
   // Check if logged in
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return this.isLoggedInSubject.value;
   }
 
-  // Decode user info
+  // Decode user info (JWT payload)
   getUser(): any {
     const token = this.getToken();
     if (!token) return null;
@@ -59,6 +70,32 @@ export class AuthService {
       return payload;
     } catch {
       return null;
+    }
+  }
+
+  // Convenience: get current user id from token
+  getUserId(): string | null {
+    const u = this.getUser();
+    return u?.id ?? null;
+  }
+
+  //  Added: currentUser getter for easier access
+  get currentUser(): any {
+    return this.getUser();
+  }
+
+  // Helper: check token exists
+  private hasToken(): boolean {
+    return !!localStorage.getItem(this.TOKEN_KEY);
+  }
+
+
+
+  // Auto login restore
+  autoLogin(): void {
+    const token = this.getToken();
+    if (token) {
+      this.isLoggedInSubject.next(true);
     }
   }
 }

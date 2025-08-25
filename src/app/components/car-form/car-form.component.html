@@ -1,4 +1,4 @@
-<h1>Add a new listing</h1>
+<h1>{{ isEdit ? 'Edit Car' : 'Add a new Car' }}</h1>
 
 <form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
   <!-- Make -->
@@ -63,15 +63,22 @@
     <textarea formControlName="description" rows="4"></textarea>
   </div>
 
-  <!-- Image URL -->
+  <!-- Contact Method -->
   <div class="row">
-    <label>Image URL (800×600)</label>
-    <input formControlName="imageUrl" placeholder="assets/images/cars/your-image.jpg" />
+    <label>Contact Method</label>
+    <input formControlName="contactMethod" placeholder="e.g., Phone, Email, WhatsApp" />
+    <small *ngIf="submitted && form.controls['contactMethod'].invalid">Required</small>
+  </div>
+
+  <!-- Images Upload -->
+  <div class="row" *ngIf="!isEdit">
+    <label>Upload Car Images</label>
+    <input type="file" (change)="onFileSelected($event)" multiple />
   </div>
 
   <!-- Actions -->
   <div class="actions">
-    <button type="submit" class="btn btn-primary">Save Listing</button>
+    <button type="submit" class="btn btn-primary">{{ isEdit ? 'Update Listing' : 'Save Listing' }}</button>
     <a routerLink="/" class="btn btn-light">Cancel</a>
   </div>
 </form>
