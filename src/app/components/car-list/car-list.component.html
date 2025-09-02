@@ -1,46 +1,42 @@
 <section class="head">
   <h1>Find your next car</h1>
   <div class="filters">
-    <!-- Search input -->
     <input
       type="text"
       [ngModel]="q()"
       (ngModelChange)="q.set($event)"
       placeholder="Search by make, model, or year"
     />
-
-    <!-- Max price -->
     <input
       type="number"
       min="0"
-      placeholder="Max price (USD)"
+      placeholder="Max price (EGP)"
       [ngModel]="maxPrice()"
       (ngModelChange)="maxPrice.set($event ? +$event : null)"
     />
-
-    <!-- Condition filter -->
     <select [ngModel]="condition()" (ngModelChange)="condition.set($event)">
       <option value="All">All</option>
       <option value="New">New</option>
       <option value="Used">Used</option>
       <option value="Certified">Certified</option>
     </select>
-
-    <!-- Sort by -->
     <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
       <option value="newest">Newest</option>
       <option value="price-asc">Price ↑</option>
       <option value="price-desc">Price ↓</option>
     </select>
 
-    <button class="btn btn-light" (click)="clearFilters()">Reset</button>
+    <!-- Reset button as icon -->
+    <button class="btn reset-btn" (click)="clearFilters()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6 0 1-.25 2-.7 2.9l1.5 1.5A7.96 7.96 0 0020 13c0-4.4-3.6-8-8-8zm-6.8.1L3.7 6.6A7.96 7.96 0 004 13c0 4.4 3.6 8 8 8v4l5-5-5-5v4c-3.3 0-6-2.7-6-6 0-1 .25-2 .7-2.9z"/>
+      </svg>
+    </button>
   </div>
 </section>
 
-<!-- Loading state -->
-<div *ngIf="loading()">Loading…</div>
+<div *ngIf="loading()" class="loading">Loading…</div>
 
-<!-- Car list -->
 <section class="grid" *ngIf="!loading()">
   <app-car-card
     *ngFor="let car of filtered(); trackBy: trackByCar"

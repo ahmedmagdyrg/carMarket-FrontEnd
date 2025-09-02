@@ -1,0 +1,1462 @@
+app.component
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  z-index: 1000;
+
+  &.scrolled {
+    background: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    .logo {
+      height: 32px;
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+
+    .btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      &-primary-outline {
+        border-color: #007bff;
+        color: #007bff;
+        background: transparent;
+
+        &:hover {
+          background: #007bff;
+          color: #fff;
+        }
+      }
+
+      &-accent-outline {
+        border-color: #28a745;
+        color: #28a745;
+        background: transparent;
+
+        &:hover {
+          background: #28a745;
+          color: #fff;
+        }
+      }
+
+      &-danger-outline {
+        border-color: #dc3545;
+        color: #dc3545;
+        background: transparent;
+
+        &:hover {
+          background: #dc3545;
+          color: #fff;
+        }
+      }
+
+      &-admin-outline {
+        border-color: #ff9800;
+        color: #ff9800;
+        background: transparent;
+        font-weight: 600;
+
+        &:hover {
+          background: #ff9800;
+          color: #fff;
+        }
+      }
+
+      &-theme-outline {
+        border-color: #6c757d;
+        color: #6c757d;
+        background: transparent;
+
+        &:hover {
+          background: #6c757d;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.container {
+  margin-top: 70px;
+  padding: 20px;
+}
+
+.footer {
+  text-align: center;
+  padding: 16px;
+  background: #f1f1f1;
+  margin-top: 40px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+
+////
+<header class="topbar" [class.scrolled]="isScrolled">
+  <div class="brand" routerLink="/cars">
+    <img src="assets/icon2.png" alt="logo" class="logo" />
+    <span>CarSpot</span>
+  </div>
+
+  <nav class="actions">
+    <button (click)="toggleTheme()" class="btn btn-theme-outline">
+      <svg *ngIf="!isDark" xmlns="http://www.w3.org/2000/svg"
+           fill="currentColor" viewBox="0 0 24 24">
+        <!-- Sun -->
+        <path d="M12 18a6 6 0 100-12 6 6 0 000 12zm0-16a1 1 0 011 1v2a1 1 0 01-2 0V3a1 1 0 011-1zm0 18a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm9-7a1 1 0 010 2h-2a1 1 0 010-2h2zM5 12a1 1 0 010 2H3a1 1 0 010-2h2zm11.95 5.536a1 1 0 01.707 1.707l-1.414 1.414a1 1 0 01-1.414-1.414l1.414-1.414a1 1 0 01.707-.293zm-9.9 0a1 1 0 010 1.414L5.636 20.95a1 1 0 01-1.414-1.414l1.414-1.414a1 1 0 011.414 0zM17.364 5.636a1 1 0 010 1.414l-1.414 1.414A1 1 0 1114.536 7.05l1.414-1.414a1 1 0 011.414 0zm-10.728 0a1 1 0 011.414 0L9.464 7.05a1 1 0 11-1.414 1.414L6.636 7.05a1 1 0 010-1.414z"/>
+      </svg>
+
+      <svg *ngIf="isDark" xmlns="http://www.w3.org/2000/svg"
+           fill="currentColor" viewBox="0 0 24 24">
+        <!-- Moon -->
+        <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>
+      </svg>
+    </button>
+
+    <ng-container *ngIf="isLoggedIn; else guestLinks">
+      <a *ngIf="isAdmin" class="btn btn-admin-outline" routerLink="/admin">
+        Admin Dashboard
+      </a>
+      <a class="btn btn-accent-outline" routerLink="/cars/new">Add Listing</a>
+      <button (click)="logout()" class="btn btn-danger-outline">Logout</button>
+    </ng-container>
+
+    <ng-template #guestLinks>
+      <a routerLink="/login" class="btn btn-primary-outline">Login</a>
+      <a routerLink="/register" class="btn btn-primary-outline">Register</a>
+    </ng-template>
+  </nav>
+</header>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <span>© {{ year }} CarSpot</span>
+</footer>
+///////////////////////////////////////////////
+user-profile.component
+<div class="container">
+  <!-- ================= User Info ================= -->
+  <div class="card user-card" *ngIf="user">
+    <div class="user-header">
+      <!-- Profile Image -->
+      <img [src]="getProfileImage()" alt="Profile" class="avatar" />
+
+      <div>
+        <h2>{{ user.name }}</h2>
+        <p class="email">{{ user.email }}</p>
+        <p class="joined">Joined: {{ user.joined | date }}</p>
+
+        <!-- Upload new profile picture -->
+        <label class="btn upload-btn">
+          Change Photo
+          <input type="file" hidden (change)="onFileSelected($event)" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= User Cars ================= -->
+  <div class="card cars-card" *ngIf="cars.length > 0">
+    <h3 class="section-title">My Cars</h3>
+    <div class="cars-grid">
+      <div class="car-card" *ngFor="let car of cars; trackBy: trackByCar">
+        <img [src]="getCarImage(car)" alt="{{ car.make }} {{ car.model }}" />
+
+        <div class="car-info">
+          <h4>{{ car.year }} {{ car.make }} {{ car.model }}</h4>
+          <p class="price">{{ car.price | currency:'EGP' }}</p>
+          <a [routerLink]
+="['/cars', car._id]" class="btn btn-view">View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Empty State if no cars ================= -->
+  <div class="card" *ngIf="cars.length === 0">
+    <p>No cars uploaded yet.</p>
+  </div>
+</div>
+/////////
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.user-card .user-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+.avatar-fallback {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #ddd;
+  color: #555;
+  font-weight: bold;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email {
+  color: #666;
+  font-size: 14px;
+}
+
+.joined {
+  font-size: 13px;
+  color: #999;
+}
+
+.btn {
+  margin-top: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.upload-btn {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.cars-card .section-title {
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.car-card {
+  background: #fafafa;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+
+.car-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.car-info {
+  padding: 12px;
+}
+
+.price {
+  font-weight: bold;
+  margin: 6px 0;
+  color: var(--primary);
+}
+
+.btn-view {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+}
+////////////////////////////////////////////////
+car-list.component
+<section class="head">
+  <h1>Find your next car</h1>
+  <div class="filters">
+    <input
+      type="text"
+      [ngModel]="q()"
+      (ngModelChange)="q.set($event)"
+      placeholder="Search by make, model, or year"
+    />
+    <input
+      type="number"
+      min="0"
+      placeholder="Max price (EGP)"
+      [ngModel]="maxPrice()"
+      (ngModelChange)="maxPrice.set($event ? +$event : null)"
+    />
+    <select [ngModel]="condition()" (ngModelChange)="condition.set($event)">
+      <option value="All">All</option>
+      <option value="New">New</option>
+      <option value="Used">Used</option>
+      <option value="Certified">Certified</option>
+    </select>
+    <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+      <option value="newest">Newest</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+    </select>
+    <button class="btn btn-light" (click)="clearFilters()">Reset</button>
+  </div>
+</section>
+
+<div *ngIf="loading()">Loading…</div>
+
+<section class="grid" *ngIf="!loading()">
+  <app-car-card
+    *ngFor="let car of filtered(); trackBy: trackByCar"
+    [car]="car"
+    (view)="open($event)">
+  </app-car-card>
+</section>
+/////////////////////////////
+:host {
+  --primary:#1DA1F2;
+  --accent:#FF8C42;
+  --text:#333;
+  --muted:#666;
+  --border:#E0E0E0;
+}
+
+.head {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+h1 {
+  margin:0;
+  color:var(--text);
+  font-weight:800;
+  font-size:24px;
+}
+
+.filters {
+  display:grid;
+  grid-template-columns: 1fr 180px 160px 140px auto;
+  gap:10px;
+}
+
+input, select {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 12px;
+  outline:none;
+  color:var(--text);
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(29,161,242,.1);
+}
+
+.btn {
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn:hover {
+  background:#f7f7f7;
+}
+
+.grid {
+  display:grid;
+  gap:14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+app-car-card img {
+  width:800px;
+  height:600px;
+  object-fit:contain;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+@media (max-width: 1024px){
+  .grid{ grid-template-columns: repeat(2, 1fr); }
+  .filters{ grid-template-columns: 1fr 1fr 1fr 1fr auto; }
+}
+
+@media (max-width: 640px){
+  .grid{ grid-template-columns: 1fr; }
+  .filters{ grid-template-columns: 1fr; }
+}
+////////////////////////////////
+car-form.component
+:host {
+  --primary: #1da1f2;
+  --primary-gradient: linear-gradient(135deg, #1da1f2, #1483c7);
+  --accent: #ff8c42;
+  --text: #222;
+  --muted: #555;
+  --border: #e0e0e0;
+  --bg: #f9fafb;
+}
+
+.form-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: var(--bg);
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.6s ease both;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-weight: 800;
+  font-size: 2rem;
+  text-align: center;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  animation: fadeInDown 0.7s ease both;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  animation: scaleIn 0.5s ease both;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: fadeIn 0.6s ease both;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+label {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+input,
+select,
+textarea {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 14px 10px;
+  outline: none;
+  color: var(--text);
+  transition: all 0.25s ease;
+  font-size: 1rem;
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(29, 161, 242, 0.15);
+    transform: scale(1.02);
+  }
+
+  &:focus + label,
+  &:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 10px;
+    font-size: 0.75rem;
+    color: var(--primary);
+    background: #fff;
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+}
+
+textarea {
+  resize: none;
+}
+
+small {
+  color: #d93025;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(29, 161, 242, 0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 18px rgba(29, 161, 242, 0.35);
+}
+
+.btn-light {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-light:hover {
+  background: #f7f7f7;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+////////////
+<div class="form-wrapper">
+  <h1>{{ isEdit ? 'Edit Car' : 'Add a new Car' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
+    <div class="row">
+      <input formControlName="make" placeholder=" " />
+      <label>Make</label>
+      <small *ngIf="submitted && form.controls['make'].invalid">Required</small>
+    </div>
+
+    <div class="row">
+      <input formControlName="model" placeholder=" " />
+      <label>Model</label>
+      <small *ngIf="submitted && form.controls['model'].invalid">Required</small>
+    </div>
+
+    <div class="row">
+      <input type="number" formControlName="year" [max]="maxYear" placeholder=" " />
+      <label>Year</label>
+      <small *ngIf="submitted && form.controls['year'].invalid">
+        Year must be between 1980 and {{ maxYear }}
+      </small>
+    </div>
+
+    <div class="row">
+      <input type="number" formControlName="price" placeholder=" " />
+      <label>Price (USD)</label>
+      <small *ngIf="submitted && form.controls['price'].invalid">Must be ≥ 0</small>
+    </div>
+
+    <div class="row">
+      <input type="number" formControlName="mileage" placeholder=" " />
+      <label>Mileage (km)</label>
+      <small *ngIf="submitted && form.controls['mileage'].invalid">Must be ≥ 0</small>
+    </div>
+
+    <div class="row">
+      <select formControlName="condition">
+        <option value="" disabled selected hidden></option>
+        <option>New</option>
+        <option>Used</option>
+        <option>Certified</option>
+      </select>
+      <label>Condition</label>
+    </div>
+
+    <div class="row">
+      <input formControlName="features" placeholder=" " />
+      <label>Features</label>
+    </div>
+
+    <div class="row full-width">
+      <textarea formControlName="description" rows="4" placeholder=" "></textarea>
+      <label>Description</label>
+    </div>
+
+    <div class="row">
+      <input formControlName="contactMethod" placeholder=" " />
+      <label>Contact Method</label>
+      <small *ngIf="submitted && form.controls['contactMethod'].invalid">Required</small>
+    </div>
+
+    <div class="row full-width" *ngIf="!isEdit">
+      <input type="file" (change)="onFileSelected($event)" multiple />
+      <label>Upload Car Images</label>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">
+        {{ isEdit ? 'Update Listing' : 'Save Listing' }}
+      </button>
+      <button type="button" class="btn btn-light" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>
+////////////////////
+car-detail.component
+:host {
+  --primary: #1DA1F2;
+  --accent: #FF8C42;
+  --danger: #E63946;
+  --secondary: #6C757D;
+  --text: #333;
+  --muted: #666;
+  --border: #E0E0E0;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: color .25s ease;
+}
+.back:hover { color: var(--accent); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.image-slider { position: relative; }
+.image-wrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.image-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform .4s ease, opacity .4s ease;
+}
+.image-wrapper img:hover {
+  transform: scale(1.05);
+  opacity: 0.95;
+}
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 50%;
+  font-size: 20px;
+  transition: background .3s ease;
+}
+.slider-btn:hover { background: rgba(0,0,0,0.8); }
+.slider-btn.left { left: 10px; }
+.slider-btn.right { right: 10px; }
+
+.info h1 {
+  margin: 0;
+  color: var(--text);
+  font-weight: 800;
+  font-size: 26px;
+  animation: fadeIn .6s ease;
+}
+.price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 10px 0;
+}
+.specs {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0 16px;
+}
+.chip {
+  font-size: 13px;
+  color: var(--primary);
+  background: rgba(29,161,242,.08);
+  border: 1px solid rgba(29,161,242,.25);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+.btn {
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .3s ease;
+}
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.btn:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+.btn-primary { background: var(--primary); }
+.btn-accent { background: var(--accent); }
+.btn-danger { background: var(--danger); }
+.btn-secondary { background: var(--secondary); }
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.06);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.1);
+}
+.card h3 {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.contact-box {
+  margin-top: 16px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.1);
+  animation: scaleUp .4s ease;
+}
+.contact-box p {
+  margin: 6px 0;
+  color: var(--text);
+}
+.contact-box .phone {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Animations */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes slideUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+@keyframes scaleUp { from {transform:scale(0.9); opacity:0;} to {transform:scale(1); opacity:1;} }
+
+.animate-fade { animation: fadeIn .8s ease; }
+.animate-slide-up { animation: slideUp .8s ease; }
+.animate-scale { animation: scaleUp .5s ease; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .btn { flex: 1; text-align: center; }
+}
+///////////
+<a routerLink="/cars" class="back">← Back to Listings</a>
+
+<section class="hero" *ngIf="car() as c">
+  <!-- Image Slider -->
+  <div class="image-slider" *ngIf="c.images?.length > 0">
+    <div class="image-wrapper">
+      <img [src]="c.images[currentIndex]" [alt]="c.make + ' ' + c.model" />
+    </div>
+    <button class="slider-btn left" type="button" (click)="prevImage()">‹</button>
+    <button class="slider-btn right" type="button" (click)="nextImage()">›</button>
+  </div>
+
+  <!-- Info -->
+  <div class="info">
+    <h1>{{ c.year }} {{ c.make }} {{ c.model }}</h1>
+    <div class="price">{{ c.price | currency:'EGP':'symbol':'1.0-0' }}</div>
+
+    <div class="specs">
+      <span class="chip">{{ c.condition }}</span>
+      <span class="chip">{{ c.mileage | number }} km</span>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="cta">
+      <button class="btn btn-primary" type="button" (click)="showContact = !showContact">
+        Contact Seller
+      </button>
+      <a class="btn btn-accent" routerLink="/cars/new">List Your Car</a>
+
+      <ng-container *ngIf="isOwner() || isAdmin()">
+        <a class="btn btn-secondary" [routerLink]="['/cars', c.id, 'edit']">Edit</a>
+        <button class="btn btn-danger" type="button" (click)="deleteCar()">Delete</button>
+      </ng-container>
+    </div>
+
+    <!-- Contact Box -->
+    <div class="contact-box animate-scale" *ngIf="showContact">
+      <p><strong>Seller Contact:</strong></p>
+      <p class="phone">{{ c.contactMethod }}</p>
+      <button class="btn btn-accent" type="button" (click)="showContact = false">Close</button>
+    </div>
+  </div>
+</section>
+
+<!-- Extra Info Cards -->
+<section class="cards" *ngIf="car() as c">
+  <div class="card" *ngIf="c.features?.length > 0">
+    <h3>Key Features</h3>
+    <ul>
+      <li *ngFor="let f of c.features">{{ f }}</li>
+    </ul>
+  </div>
+
+  <div class="card" *ngIf="c.description">
+    <h3>Description</h3>
+    <p>{{ c.description }}</p>
+  </div>
+</section>
+///////////////////////////////////////
+car-card.component
+$primary: #1DA1F2;
+$accent: #FF8C42;
+$text: #222;
+$muted: #777;
+$border: #E0E0E0;
+
+:host {
+  --primary: #{$primary};
+  --accent: #{$accent};
+  --text: #{$text};
+  --muted: #{$muted};
+  --border: #{$border};
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.thumb-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+
+  .card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  padding: 6px 12px;
+  border-radius: 50%;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  &.prev { left: 10px; }
+  &.next { right: 10px; }
+}
+
+.body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.meta {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+
+  .price {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent);
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  font-size: 12px;
+  color: var(--primary);
+  background: rgba(29, 161, 242, .08);
+  border: 1px solid rgba(29, 161, 242, .25);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.btn {
+  align-self: flex-start;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: var(--accent);
+  margin-top: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: darken($accent, 8%);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+////////////
+<div class="card horizontal">
+  <div class="thumb-wrapper">
+    <img
+      class="thumb"
+      [src]="images[currentIndex]"
+      [alt]="car.make + ' ' + car.model"
+      loading="lazy"
+    />
+
+    <!-- يظهر بس لو العربية Featured -->
+    <span class="badge" *ngIf="car.featured">Featured</span>
+
+    <button *ngIf="images.length > 1" class="nav prev" (click)="prev()">‹</button>
+    <button *ngIf="images.length > 1" class="nav next" (click)="next()">›</button>
+  </div>
+
+  <div class="body">
+    <h3 class="title">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+    <div class="meta">
+      <span class="price">{{ car.price | currency:'EGP':'symbol':'1.0-0' }}</span>
+      <span class="dot">•</span>
+      <span class="mileage">{{ car.mileage | number }} km</span>
+    </div>
+    <div class="tags">
+      <span class="chip">{{ car.condition }}</span>
+    </div>
+    <button class="btn btn-accent" (click)="view.emit(car.id)">
+      View Details
+    </button>
+  </div>
+</div>
+///////////////
+register.component
+/* Wrapper centers the card */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+/* Main auth card */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  text-align: center;
+}
+
+/* Headings */
+h2 {
+  color: #333333;
+  margin-bottom: 24px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #333333;
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    transition: 0.2s;
+
+    &:focus {
+      border-color: #1DA1F2;
+      box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.1);
+    }
+  }
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #1DA1F2;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: #0d8ddb;
+  }
+}
+
+/* Error & muted text */
+.error {
+  color: #ff4d4f;
+  margin-top: 12px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.muted {
+  color: #666666;
+  margin-top: 16px;
+  font-size: 14px;
+
+  .link {
+    color: #FF8C42;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+/////////////
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Create an Account</h2>
+
+    <form (ngSubmit)="onSubmit()" #f="ngForm" novalidate>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          name="name"
+          [(ngModel)]="name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="At least 6 characters"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+        />
+      </div>
+
+      <button class="btn-primary" type="submit" [disabled]="loading || !f.form.valid">
+        {{ loading ? 'Creating…' : 'Register' }}
+      </button>
+    </form>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <p class="muted">
+      Already have an account?
+      <a routerLink="/login" class="link">Login</a>
+    </p>
+  </div>
+</div>
+////////////
+login.component
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  text-align: center;
+}
+
+h2 {
+  color: #333333;
+  margin-bottom: 24px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #333333;
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    transition: 0.2s;
+
+    &:focus {
+      border-color: #1DA1F2;
+      box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.1);
+    }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #1DA1F2;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: #0d8ddb;
+  }
+}
+
+.error {
+  color: #ff4d4f;
+  margin-top: 12px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.muted {
+  color: #666666;
+  margin-top: 16px;
+  font-size: 14px;
+
+  .link {
+    color: #FF8C42;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+///////////////
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Login</h2>
+
+    <form (ngSubmit)="onSubmit()" #f="ngForm" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+        />
+      </div>
+
+      <button class="btn-primary" type="submit" [disabled]="loading || !f.form.valid">
+        {{ loading ? 'Logging in…' : 'Login' }}
+      </button>
+    </form>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <p class="muted">
+      Don’t have an account?
+      <a routerLink="/register" class="link">Register</a>
+    </p>
+  </div>
+</div>

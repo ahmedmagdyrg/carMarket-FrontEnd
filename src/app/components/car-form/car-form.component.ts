@@ -76,10 +76,13 @@ export class CarFormComponent implements OnInit {
     this.selectedFiles = Array.from(event.target.files);
   }
 
+  onCancel() {
+    this.router.navigate(['/cars']);
+  }
+
   async save() {
     this.submitted = true;
 
-    // 🔹 Check if user is logged in before saving
     const token = localStorage.getItem('token');
     if (!token) {
       Swal.fire({
@@ -125,12 +128,9 @@ export class CarFormComponent implements OnInit {
       let savedCar: any;
 
       if (this.isEdit) {
-        // Update existing car
         savedCar = await this.svc.update(this.carId!, formData);
-        // Navigate to car detail page after update
         this.router.navigate(['/cars', this.carId]);
       } else {
-        // Create new car
         savedCar = await this.svc.create(formData);
         this.router.navigate(['/cars', savedCar._id]);
       }

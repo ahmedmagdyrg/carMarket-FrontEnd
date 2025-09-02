@@ -1,0 +1,76 @@
+<div [class.dark-mode]="darkMode" class="admin-dashboard" [@fadeIn]>
+  <div class="top-bar">
+    <h2>Admin Dashboard</h2>
+    <button class="dark-mode-toggle" (click)="toggleDarkMode()">
+      {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
+    </button>
+  </div>
+
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (input)="applyFilter()"
+    placeholder="Search by name or email"
+    class="search-bar"
+  />
+
+  <div class="stats" *ngIf="stats" [@fadeIn]>
+    <div class="stat-card">
+      <p class="label">Total Users</p>
+      <p class="value">{{ stats.totalUsers }}</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Total Cars</p>
+      <p class="value">{{ stats.totalCars }}</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Logged In Today</p>
+      <p class="value">{{ stats.usersLoggedInToday }}</p>
+    </div>
+    <div class="stat-card" *ngIf="stats.latestCar">
+      <p class="label">Latest Car</p>
+      <p class="value">{{ stats.latestCar.name }}</p>
+      <p class="date">{{ stats.latestCar.createdAt | date: 'short' }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading users...</div>
+
+  <table *ngIf="!loading" class="users-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let user of filteredUsers; let i = index"
+        [class.banned-row]="user.banned"
+        [@rowAnimation]
+      >
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.name || 'N/A' }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <span class="status" [ngClass]="{ banned: user.banned }">
+            {{ user.banned ? 'Banned' : 'Active' }}
+          </span>
+        </td>
+        <td>
+          <button
+            class="action-btn"
+            [ngClass]="user.banned ? 'unban' : 'ban'"
+            (click)="toggleBan(user)"
+            [@buttonAnimation]
+          >
+            {{ user.banned ? 'Unban' : 'Ban' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -14,16 +14,18 @@ export class CarCardComponent {
 
   currentIndex = 0;
 
-  get images(): string[] {
-    return this.car?.images?.length ? this.car.images : [this.car.imageUrl];
+  get originals(): string[] {
+    return this.car?.images?.originals?.length
+      ? this.car.images.originals
+      : [this.car.imageUrl];
   }
 
   next() {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    this.currentIndex = (this.currentIndex + 1) % this.originals.length;
   }
 
   prev() {
     this.currentIndex =
-      (this.currentIndex - 1 + this.images.length) % this.images.length;
+      (this.currentIndex - 1 + this.originals.length) % this.originals.length;
   }
 }

@@ -1,84 +1,77 @@
-<h1>{{ isEdit ? 'Edit Car' : 'Add a new Car' }}</h1>
+<div class="form-wrapper">
+  <h1>{{ isEdit ? 'Edit Car' : 'Add a new Car' }}</h1>
 
-<form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
-  <!-- Make -->
-  <div class="row">
-    <label>Make</label>
-    <input formControlName="make" placeholder="e.g., Toyota" />
-    <small *ngIf="submitted && form.controls['make'].invalid">Required</small>
-  </div>
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
+    <div class="row">
+      <input formControlName="make" placeholder=" " />
+      <label>Make</label>
+      <small *ngIf="submitted && form.controls['make'].invalid">Required</small>
+    </div>
 
-  <!-- Model -->
-  <div class="row">
-    <label>Model</label>
-    <input formControlName="model" placeholder="e.g., Corolla" />
-    <small *ngIf="submitted && form.controls['model'].invalid">Required</small>
-  </div>
+    <div class="row">
+      <input formControlName="model" placeholder=" " />
+      <label>Model</label>
+      <small *ngIf="submitted && form.controls['model'].invalid">Required</small>
+    </div>
 
-  <!-- Year -->
-  <div class="row">
-    <label>Year</label>
-    <input type="number" formControlName="year" [max]="maxYear" />
-    <small *ngIf="submitted && form.controls['year'].invalid">
-      Year must be between 1980 and {{ maxYear }}
-    </small>
-  </div>
+    <div class="row">
+      <input type="number" formControlName="year" [max]="maxYear" placeholder=" " />
+      <label>Year</label>
+      <small *ngIf="submitted && form.controls['year'].invalid">
+        Year must be between 1980 and {{ maxYear }}
+      </small>
+    </div>
 
-  <!-- Price -->
-  <div class="row">
-    <label>Price (USD)</label>
-    <input type="number" formControlName="price" />
-    <small *ngIf="submitted && form.controls['price'].invalid">Must be ≥ 0</small>
-  </div>
+    <div class="row">
+      <input type="number" formControlName="price" placeholder=" " />
+      <label>Price (EGP)</label>
+      <small *ngIf="submitted && form.controls['price'].invalid">Must be ≥ 0</small>
+    </div>
 
-  <!-- Mileage -->
-  <div class="row">
-    <label>Mileage (km)</label>
-    <input type="number" formControlName="mileage" />
-    <small *ngIf="submitted && form.controls['mileage'].invalid">Must be ≥ 0</small>
-  </div>
+    <div class="row">
+      <input type="number" formControlName="mileage" placeholder=" " />
+      <label>Mileage (km)</label>
+      <small *ngIf="submitted && form.controls['mileage'].invalid">Must be ≥ 0</small>
+    </div>
 
-  <!-- Condition -->
-  <div class="row">
-    <label>Condition</label>
-    <select formControlName="condition">
-      <option>New</option>
-      <option>Used</option>
-      <option>Certified</option>
-    </select>
-  </div>
+    <div class="row">
+      <select formControlName="condition">
+        <option value="" disabled selected hidden></option>
+        <option>New</option>
+        <option>Used</option>
+        <option>Certified</option>
+      </select>
+      <label>Condition</label>
+    </div>
 
-  <!-- Features -->
-  <div class="row">
-    <label>Features</label>
-    <input
-      formControlName="features"
-      placeholder="Comma separated (e.g., Sunroof, Leather Seats)"
-    />
-  </div>
+    <!-- Features + Contact Method جنب بعض -->
+    <div class="row half-width">
+      <input formControlName="features" placeholder=" " />
+      <label>Features</label>
+    </div>
 
-  <!-- Description -->
-  <div class="row">
-    <label>Description</label>
-    <textarea formControlName="description" rows="4"></textarea>
-  </div>
+    <div class="row half-width">
+      <input formControlName="contactMethod" placeholder=" " />
+      <label>Contact Method</label>
+      <small *ngIf="submitted && form.controls['contactMethod'].invalid">Required</small>
+    </div>
 
-  <!-- Contact Method -->
-  <div class="row">
-    <label>Contact Method</label>
-    <input formControlName="contactMethod" placeholder="e.g., Phone, Email, WhatsApp" />
-    <small *ngIf="submitted && form.controls['contactMethod'].invalid">Required</small>
-  </div>
+    <!-- Description Full Width -->
+    <div class="row full-width">
+      <textarea formControlName="description" rows="4" placeholder=" "></textarea>
+      <label>Description</label>
+    </div>
 
-  <!-- Images Upload -->
-  <div class="row" *ngIf="!isEdit">
-    <label>Upload Car Images</label>
-    <input type="file" (change)="onFileSelected($event)" multiple />
-  </div>
+    <div class="row full-width" *ngIf="!isEdit">
+      <input type="file" (change)="onFileSelected($event)" multiple />
+      <label>Upload Car Images</label>
+    </div>
 
-  <!-- Actions -->
-  <div class="actions">
-    <button type="submit" class="btn btn-primary">{{ isEdit ? 'Update Listing' : 'Save Listing' }}</button>
-    <a routerLink="/" class="btn btn-light">Cancel</a>
-  </div>
-</form>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">
+        {{ isEdit ? 'Update Listing' : 'Save Listing' }}
+      </button>
+      <button type="button" class="btn btn-light" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

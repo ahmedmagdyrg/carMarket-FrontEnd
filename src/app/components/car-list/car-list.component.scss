@@ -1,71 +1,109 @@
 :host {
-  --primary:#1DA1F2;
-  --accent:#FF8C42;
-  --text:#333;
-  --muted:#666;
-  --border:#E0E0E0;
+  --primary: #1da1f2;
+  --accent: #ff8c42;
+  --text: #333;
+  --muted: #666;
+  --border: #e0e0e0;
+  --surface: #fff;
+  --background: #fafafa;
+}
+
+:host-context(.dark-theme) {
+  --text: #f5f5f5;
+  --muted: #aaa;
+  --border: #444;
+  --surface: #1e1e1e;
+  --background: #121212;
 }
 
 .head {
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-bottom:16px;
-}
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
 
-h1 {
-  margin:0;
-  color:var(--text);
-  font-weight:800;
-  font-size:24px;
+  h1 {
+    margin: 0;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 24px;
+  }
 }
 
 .filters {
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 180px 160px 140px auto;
-  gap:10px;
+  gap: 10px;
+
+  input,
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    color: var(--text);
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2);
+    }
+  }
+
+  .btn {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--background);
+    }
+  }
 }
 
-input, select {
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:10px 12px;
-  outline:none;
-  color:var(--text);
-}
-
-input:focus, select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(29,161,242,.1);
-}
-
-.btn {
-  border:1px solid var(--border);
-  background:#fff;
-  color:var(--text);
-  padding:10px 12px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.btn:hover {
-  background:#f7f7f7;
+.loading {
+  color: var(--muted);
+  font-size: 16px;
+  padding: 12px;
 }
 
 .grid {
-  display:grid;
-  gap:14px;
+  display: grid;
+  gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-@media (max-width: 1024px){
-  .grid{ grid-template-columns: repeat(2, 1fr); }
-  .filters{ grid-template-columns: 1fr 1fr 1fr 1fr auto; }
+app-car-card {
+  img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
 }
 
-@media (max-width: 640px){
-  .grid{ grid-template-columns: 1fr; }
-  .filters{ grid-template-columns: 1fr; }
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .filters {
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .filters {
+    grid-template-columns: 1fr;
+  }
 }

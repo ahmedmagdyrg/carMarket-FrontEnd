@@ -1,50 +1,52 @@
-<a routerLink="/cars" class="back">← Back to listings</a>
+<a routerLink="/cars" class="back">← Back to Listings</a>
 
 <section class="hero" *ngIf="car() as c">
-  <div class="image-slider" *ngIf="c.images?.length">
-    <img [src]="c.images[currentIndex]" [alt]="c.make + ' ' + c.model" />
-    <button class="slider-btn left" (click)="prevImage()">‹</button>
-    <button class="slider-btn right" (click)="nextImage()">›</button>
+  <div class="image-slider" *ngIf="c.images?.resized?.length > 0">
+    <div class="image-wrapper">
+      <img [src]="c.images.resized[currentIndex]" [alt]="c.make + ' ' + c.model" />
+    </div>
+    <button class="slider-btn left" type="button" (click)="prevImage()">‹</button>
+    <button class="slider-btn right" type="button" (click)="nextImage()">›</button>
   </div>
 
   <div class="info">
     <h1>{{ c.year }} {{ c.make }} {{ c.model }}</h1>
-    <div class="price">{{ c.price | currency:'USD':'symbol':'1.0-0' }}</div>
+    <div class="price">{{ c.price | currency:'EGP':'symbol':'1.0-0' }}</div>
+
     <div class="specs">
       <span class="chip">{{ c.condition }}</span>
       <span class="chip">{{ c.mileage | number }} km</span>
     </div>
 
     <div class="cta">
-      <button class="btn btn-primary" (click)="showContact = !showContact">
+      <button class="btn btn-primary" type="button" (click)="showContact = !showContact">
         Contact Seller
       </button>
       <a class="btn btn-accent" routerLink="/cars/new">List Your Car</a>
 
-      <!-- Edit/Delete visible only for owner -->
-      <ng-container *ngIf="isOwner()">
+      <ng-container *ngIf="isOwner() || isAdmin()">
         <a class="btn btn-secondary" [routerLink]="['/cars', c.id, 'edit']">Edit</a>
-        <button class="btn btn-danger" (click)="deleteCar()">Delete</button>
+        <button class="btn btn-danger" type="button" (click)="deleteCar()">Delete</button>
       </ng-container>
     </div>
 
-    <!-- Contact Seller popup -->
-    <div class="contact-box" *ngIf="showContact">
+    <div class="contact-box animate-scale" *ngIf="showContact">
       <p><strong>Seller Contact:</strong></p>
       <p class="phone">{{ c.contactMethod }}</p>
-      <button class="btn btn-accent" (click)="showContact = false">Close</button>
+      <button class="btn btn-accent" type="button" (click)="showContact = false">Close</button>
     </div>
   </div>
 </section>
 
 <section class="cards" *ngIf="car() as c">
-  <div class="card">
+  <div class="card" *ngIf="c.features?.length > 0">
     <h3>Key Features</h3>
     <ul>
       <li *ngFor="let f of c.features">{{ f }}</li>
     </ul>
   </div>
-  <div class="card">
+
+  <div class="card" *ngIf="c.description">
     <h3>Description</h3>
     <p>{{ c.description }}</p>
   </div>

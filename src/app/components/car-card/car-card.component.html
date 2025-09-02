@@ -1,19 +1,22 @@
-<div class="card">
+<div class="card horizontal">
   <div class="thumb-wrapper">
     <img
       class="thumb"
-      [src]="images[currentIndex]"
+      [src]="originals[currentIndex]"
       [alt]="car.make + ' ' + car.model"
       loading="lazy"
     />
-    <button *ngIf="images.length > 1" class="nav prev" (click)="prev()">‹</button>
-    <button *ngIf="images.length > 1" class="nav next" (click)="next()">›</button>
+
+    <span class="badge" *ngIf="car.featured">Featured</span>
+
+    <button *ngIf="originals.length > 1" class="nav prev" (click)="prev()">‹</button>
+    <button *ngIf="originals.length > 1" class="nav next" (click)="next()">›</button>
   </div>
 
   <div class="body">
     <h3 class="title">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
     <div class="meta">
-      <span class="price">{{ car.price | currency:'USD':'symbol':'1.0-0' }}</span>
+      <span class="price">{{ car.price | currency:'EGP':'symbol':'1.0-0' }}</span>
       <span class="dot">•</span>
       <span class="mileage">{{ car.mileage | number }} km</span>
     </div>
