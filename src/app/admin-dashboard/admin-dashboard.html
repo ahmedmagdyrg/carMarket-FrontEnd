@@ -43,7 +43,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Status</th>
-        <th>Action</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -60,7 +60,7 @@
             {{ user.banned ? 'Banned' : 'Active' }}
           </span>
         </td>
-        <td>
+        <td class="actions-cell">
           <button
             class="action-btn"
             [ngClass]="user.banned ? 'unban' : 'ban'"
@@ -68,6 +68,20 @@
             [@buttonAnimation]
           >
             {{ user.banned ? 'Unban' : 'Ban' }}
+          </button>
+          <button
+            class="action-btn profile"
+            (click)="viewProfile(user)"
+            [@buttonAnimation]
+          >
+            View
+          </button>
+          <button
+            class="action-btn delete"
+            (click)="deleteUser(user)"
+            [@buttonAnimation]
+          >
+            Delete
           </button>
         </td>
       </tr>

@@ -73,9 +73,19 @@ export class UserService {
     );
   }
 
+  async deleteUser(userId: string): Promise<any> {
+    return await firstValueFrom(
+      this.http.delete(`${this.apiUrl}/users/${userId}`, this.getAuthHeaders())
+    );
+  }
+
   async getDashboardStats(): Promise<any> {
     return await firstValueFrom(
       this.http.get<any>(`${this.apiUrl}/admin/dashboard-stats`, this.getAuthHeaders())
     );
   }
+getUserById(id: string): Promise<any> {
+  return this.http.get<any>(`${this.apiUrl}/users/${id}`, this.getAuthHeaders()).toPromise();
+}
+
 }

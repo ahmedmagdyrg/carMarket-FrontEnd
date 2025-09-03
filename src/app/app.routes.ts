@@ -30,8 +30,9 @@ export const routes: Routes = [
   { path: 'cars/:id', component: CarDetailComponent, title: 'Car Details' },
   { path: 'cars/:id/edit', component: CarFormComponent, title: 'Edit Car' },
 
-  // User profile route
-  { path: 'profile', component: UserProfileComponent, title: 'Profile' },
+// User profile routes
+{ path: 'profile', component: UserProfileComponent, title: 'My Profile' },
+{ path: 'profile/:id', component: UserProfileComponent, canActivate: [adminGuard], title: 'User Profile' },
 
   // Admin routes
   {

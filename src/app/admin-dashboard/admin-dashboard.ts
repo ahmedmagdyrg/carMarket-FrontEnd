@@ -9,6 +9,7 @@ import {
   style,
   animate,
 } from '@angular/animations';
+import { Router } from '@angular/router';
 
 interface User {
   _id: string;
@@ -54,7 +55,7 @@ export class AdminDashboardComponent implements OnInit {
   searchTerm = '';
   darkMode = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     this.loading = true;
@@ -62,7 +63,6 @@ export class AdminDashboardComponent implements OnInit {
     this.applyFilter();
     this.loading = false;
 
-    // Optional: remember dark mode from localStorage
     const savedMode = localStorage.getItem('darkMode');
     this.darkMode = savedMode === 'true';
   }
@@ -71,7 +71,7 @@ export class AdminDashboardComponent implements OnInit {
     try {
       this.users = await this.userService.getAllUsers();
       this.applyFilter();
-    } catch (error: any) {
+    } catch {
       Swal.fire('Error', 'Failed to load users.', 'error');
     }
   }
@@ -79,7 +79,7 @@ export class AdminDashboardComponent implements OnInit {
   async loadStats(): Promise<void> {
     try {
       this.stats = await this.userService.getDashboardStats();
-    } catch (error: any) {
+    } catch {
       Swal.fire('Error', 'Failed to load stats.', 'error');
     }
   }
@@ -92,7 +92,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async toggleBan(user: User): Promise<void> {
-    const action = user.banned ? 'unbanUser' : 'banUser';
     const actionText = user.banned ? 'Unbanned' : 'Banned';
 
     try {
@@ -111,11 +110,64 @@ export class AdminDashboardComponent implements OnInit {
         showConfirmButton: false,
       });
       this.applyFilter();
-    } catch (error: any) {
-      Swal.fire('Error', `Failed to ${action} the user.`, 'error');
+    } catch {
+      Swal.fire('Error', `Failed to ${actionText.toLowerCase()} the user.`, 'error');
     }
   }
 
+  async deleteUser(user: User): Promise<void> {
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: `Delete user ${user.name}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await this.userService.deleteUser(user._id);
+        this.users = this.users.filter(u => u._id !== user._id);
+        this.applyFilter();
+
+        Swal.fire('Deleted!', 'User has been deleted.', 'success');
+      } catch {
+        Swal.fire('Error', 'Failed to delete user.', 'error');
+      }
+    }
+  }
+
+viewProfile(user: User): void {
+  Swal.fire({
+    title: user.name,
+    html: `
+      <div style="text-align:left;">
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Role:</strong> ${user.role}</p>
+        <p><strong>Status:</strong> ${user.banned ? 'Banned' : 'Active'}</p>
+        <p><strong>Joined:</strong> ${
+          (user as any).createdAt
+            ? new Date((user as any).createdAt).toLocaleDateString()
+            : 'N/A'
+        }</p>
+        <button id="viewProfileBtn" class="swal2-confirm swal2-styled" 
+          style="background:#3085d6; border-radius:8px; margin-top:12px;">
+          View Full Profile
+        </button>
+      </div>
+    `,
+    showConfirmButton: false,
+    didOpen: () => {
+      const btn = document.getElementById('viewProfileBtn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          Swal.close();
+          this.router.navigate([`/profile/${user._id}`]);
+        });
+      }
+    }
+  });
+}
   toggleDarkMode(): void {
     this.darkMode = !this.darkMode;
     localStorage.setItem('darkMode', this.darkMode.toString());

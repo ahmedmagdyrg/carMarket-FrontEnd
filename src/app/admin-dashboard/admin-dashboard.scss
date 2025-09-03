@@ -95,6 +95,22 @@
           background-color: #2e7d32;
         }
       }
+
+      &.delete {
+        background-color: #6c757d;
+
+        &:hover {
+          background-color: #495057;
+        }
+      }
+
+      &.profile {
+        background-color: #3182ce;
+
+        &:hover {
+          background-color: #2b6cb0;
+        }
+      }
     }
 
     .dark-mode-toggle {
@@ -259,6 +275,12 @@
       }
     }
   }
+  .actions-cell {
+  display: flex;
+  gap: 0.6rem; 
+  justify-content: flex-start; 
+  align-items: center; 
+  }
 
   .status {
     font-weight: 600;
@@ -301,6 +323,24 @@
 
       &:hover {
         background-color: #2f855a;
+      }
+    }
+
+    &.delete {
+      background-color: #6c757d;
+      color: white;
+
+      &:hover {
+        background-color: #495057;
+      }
+    }
+
+    &.profile {
+      background-color: #3182ce;
+      color: white;
+
+      &:hover {
+        background-color: #2b6cb0;
       }
     }
   }
